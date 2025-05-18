@@ -39,7 +39,7 @@ contract VRFLottery is VRFConsumerBaseV2Plus {
         s_players.push(msg.sender);
     }
 
-    function randomWinnerSelector() public onlyAdmin {
+    function randomWinnerSelector() public {
         VRFV2PlusClient.RandomWordsRequest memory request = VRFV2PlusClient.RandomWordsRequest({
             keyHash: i_keyHash,
             subId: i_subscriptionId,
@@ -58,6 +58,9 @@ contract VRFLottery is VRFConsumerBaseV2Plus {
 
     function selectWinner() public onlyAdmin {
         require(s_players.length > 4, "Not enough entries");
+
+        randomWinnerSelector();
+
         require(s_randomWords.length > 0, "Random words not fulfilled yet");
 
         uint256 index = s_randomWords[0] % s_players.length;
